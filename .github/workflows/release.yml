@@ -36,11 +36,10 @@ jobs:
           DO_NOT_TRACK: 1
 
       - name: Delete the "latest" Release
-        uses: dev-drprasad/delete-tag-and-release@v0.2.1
         if: ${{ steps.vars.outputs.is_release_type_latest == 'true' }}
-        with:
-          tag_name: ${{ steps.vars.outputs.tag_name }}
-          delete_release: true
+        run: |
+          gh release delete ${{ steps.vars.outputs.tag_name }} --yes || true
+          git push --delete origin ${{ steps.vars.outputs.tag_name }} || true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
